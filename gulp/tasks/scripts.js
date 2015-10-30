@@ -17,6 +17,6 @@ gulp.task('scripts', function() {
   // Bundle to a single file
   .pipe(concat('bundle.js'))
   // Output it to our dist folder
-  .pipe(gulp.dest('dist/js'))
+  .pipe(gulp.dest('dist/scripts'))
   .pipe(refresh(lrserver));
 });

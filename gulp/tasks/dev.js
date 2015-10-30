@@ -9,7 +9,7 @@ gulp.task('dev', function () {
   global.isDebugBuild = true;
 
   runSequence(
-    ['views', 'lint', 'scripts', 'styles'],
+    ['views', 'lint', 'scripts', 'styles', 'images'],
     'watch'
   );
 });

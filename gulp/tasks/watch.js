@@ -37,4 +37,8 @@ gulp.task('watch', ['lint'], function() {
   gulp.watch(['app/styles/**/*.scss'], [
     'styles'
   ]);
+
+  gulp.watch(['app/images/**/*.png', 'app/images/**/*.jpg'], [
+    'images'
+  ]);
 });
