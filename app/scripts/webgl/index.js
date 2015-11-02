@@ -1,14 +1,16 @@
 var THREE = require('three');
 var Stats = require('./stats');
+var Utils = require('./utils');
 require('./trackball');
 
 var Emoji = require('./emoji');
 
 var WebGL = function() {
   this.container = document.createElement('div');
+  this.container.classList.add('webgl');
   document.body.appendChild( this.container );
 
-  window.addEventListener( 'resize', onWindowResize.bind(this), false );
+  window.addEventListener( 'resize', this.onWindowResize.bind(this), false );
 
   this.initRenderer();
   this.initScene();
@@ -16,7 +18,10 @@ var WebGL = function() {
   this.initLight();
   this.initMisc();
 
-  var EmojiController = new Emoji(this.scene);
+  this.emojiCtrl = new Emoji(this.scene);
+  this.utilsCtrl = new Utils();
+
+  this.initPicker();
 
   this.animate();
 };
@@ -44,6 +49,11 @@ WebGL.prototype.initLight = function() {
   this.scene.add( light );
 };
 
+WebGL.prototype.initPicker = function() {
+  this.raycaster = new THREE.Raycaster();
+  this.renderer.domElement.addEventListener('click', this.onMouseClick.bind(this));
+};
+
 WebGL.prototype.initMisc = function() {
   // Trackball controls
   this.controls = new THREE.TrackballControls( this.camera );
@@ -66,7 +76,7 @@ WebGL.prototype.render = function() {
   this.renderer.render( this.scene, this.camera );
 };
 
-function onWindowResize() {
+WebGL.prototype.onWindowResize = function() {
   windowHalfX = window.innerWidth / 2;
   windowHalfY = window.innerHeight / 2;
 
@@ -74,6 +84,18 @@ function onWindowResize() {
   this.camera.updateProjectionMatrix();
 
   this.renderer.setSize( window.innerWidth, window.innerHeight );
-}
+};
+
+WebGL.prototype.onMouseClick = function(e) {
+  e.preventDefault();
+
+  this.raycaster.setFromCamera(this.utilsCtrl.getMouse(), this.camera);
+
+  var intersects = this.raycaster.intersectObjects(this.emojiCtrl.getEmoji());
+
+  if (intersects.length > 0) {
+    console.log('gotcha');
+  }
+};
 
 module.exports = WebGL;

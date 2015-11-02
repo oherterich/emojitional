@@ -3,6 +3,7 @@ var THREE = require('three');
 var Emoji = function(scene) {
   this.numParticles = 100;
   this.emojiImages = [];
+  this.emojiObjects = [];
 
   this.createImageArray();
   this.initEmojiObjects(scene);
@@ -21,7 +22,6 @@ Emoji.prototype.initEmojiObjects = function(scene) {
 
   this.emojiImages.forEach(function(emojiImage, index) {
     loader.load(emojiImage, function(texture) {
-      console.log(emojiImage);
       var vector = new THREE.Vector3();
 
       var phi = Math.acos( -1 + ( 2 * index ) / this.numParticles );
@@ -42,8 +42,13 @@ Emoji.prototype.initEmojiObjects = function(scene) {
       plane.lookAt( vector );
 
       scene.add( plane );
+      this.emojiObjects.push(plane);
     }.bind(this));
   }.bind(this));
+};
+
+Emoji.prototype.getEmoji = function() {
+  return this.emojiObjects;
 };
 
 module.exports = Emoji;
